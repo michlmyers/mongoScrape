@@ -9,6 +9,8 @@ var db = require('./models');
 
 var app = express();
 
+var PORT = 3000;
+
 app.engine('handlebars', exphbs({defaultLayout: 'main'}));
 app.set('view engine', 'handlebars');
 
@@ -24,3 +26,11 @@ mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
 // Routes
+app.get('/', function(req, res) {
+    res.render('index');
+});
+
+// Server 
+app.listen(PORT, function() {
+    console.log('App running on port ' + PORT + '!!');
+});
