@@ -30,6 +30,22 @@ app.get('/', function(req, res) {
     res.render('index');
 });
 
+app.get('/scape', function(req, res) {
+// scrape  code here
+});
+
+app.get('/articles', function(req, res) {
+// article code goes here
+})
+
+app.get('/articles/:id', function(req, res) {
+// unique article get request here
+})
+
+app.post('/articles/:id', function(req, res) {
+// post article comment code
+})
+
 // Server 
 app.listen(PORT, function() {
     console.log('App running on port ' + PORT + '!!');
