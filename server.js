@@ -11,7 +11,7 @@ var app = express();
 
 var PORT = 3000;
 
-app.engine('handlebars', exphbs({defaultLayout: 'main'}));
+app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -26,27 +26,48 @@ mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
 // Routes
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.render('index');
 });
 
-app.get('/scape', function(req, res) {
-// scrape  code here
+app.get('/scape', function (req, res) {
+    // scrape  code here
+    request('http://www.brooklynvegan.com/', function (error, response, html) {
+        var $ = cheerio.load(response.data);
+
+        var results = [];
+
+        $('h2.title').each(function (i, element) {
+            var link = $(element).children().attr('href');
+            var title = $(element).children().text();
+            results.push({
+                title: title,
+                link: link
+            });
+            $('div.the_excerpt'.each(function (i, element) {
+                var excerpt = $(element).children().attr('p');
+                results.push({
+                    excerpt: excerpt
+                });
+            }));
+        });
+    });
+    console.log(results);
 });
 
-app.get('/articles', function(req, res) {
-// article code goes here
+app.get('/articles', function (req, res) {
+    // article code goes here
 })
 
-app.get('/articles/:id', function(req, res) {
-// unique article get request here
+app.get('/articles/:id', function (req, res) {
+    // unique article get request here
 })
 
-app.post('/articles/:id', function(req, res) {
-// post article comment code
+app.post('/articles/:id', function (req, res) {
+    // post article comment code
 })
 
 // Server 
-app.listen(PORT, function() {
+app.listen(PORT, function () {
     console.log('App running on port ' + PORT + '!!');
 });
