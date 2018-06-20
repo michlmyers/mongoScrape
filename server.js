@@ -30,10 +30,10 @@ app.get('/', function (req, res) {
     res.render('index');
 });
 
-app.get('/scape', function (req, res) {
+app.get('/scrape', function (req, res) {
     // scrape  code here
     request('http://www.brooklynvegan.com/', function (error, response, html) {
-        var $ = cheerio.load(response.data);
+        var $ = cheerio.load(html);
 
         var results = [];
 
@@ -44,15 +44,17 @@ app.get('/scape', function (req, res) {
                 title: title,
                 link: link
             });
-            $('div.the_excerpt'.each(function (i, element) {
-                var excerpt = $(element).children().attr('p');
+            $('div.the_excerpt').each(function (i, element) {
+                var excerpt = $(element).children().text();
                 results.push({
                     excerpt: excerpt
                 });
-            }));
+                console.log(results);
+            });
         });
     });
-    console.log(results);
+
+    res.send('scrape completed');
 });
 
 app.get('/articles', function (req, res) {
