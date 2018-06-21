@@ -36,8 +36,6 @@ app.get('/scrape', function (req, res) {
     request('http://www.brooklynvegan.com/', function (error, response, html) {
         var $ = cheerio.load(html);
 
-
-
         $('h2.title').each(function (i, element) {
             var link = $(element).children().attr('href');
             var title = $(element).children().text();
@@ -51,8 +49,6 @@ app.get('/scrape', function (req, res) {
                 results.push({
                     excerpt: excerpt
                 });
-                // console.log(results);
-
             });
         });
     });
