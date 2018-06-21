@@ -52,6 +52,7 @@ app.get('/scrape', function (req, res) {
             });
         });
     });
+    console.log(results);
     db.Article.create(results)
         .then(function (dbArticle) {
             console.log(dbArticle);
