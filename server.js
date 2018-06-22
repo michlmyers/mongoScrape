@@ -32,34 +32,33 @@ app.get('/', function (req, res) {
 
 app.get('/scrape', function (req, res) {
     // scrape  code here
-    var results = [];
+
     request('http://www.brooklynvegan.com/', function (error, response, html) {
         var $ = cheerio.load(html);
-
+        var results = [];
         $('h2.title').each(function (i, element) {
             var link = $(element).children().attr('href');
             var title = $(element).children().text();
             results.push({
                 title: title,
-                link: link
-            });
-
-            $('div.the_excerpt').each(function (i, element) {
-                var excerpt = $(element).children().text();
-                results.push({
-                    excerpt: excerpt
-                });
+                link: link,
             });
         });
+        // $('div.the_excerpt').each(function (i, element) {
+        //     var excerpt = $(element).children().text();
+        //     results.push({
+        //         excerpt: excerpt
+        //     });
+        // });
+        console.log(results);
+        db.Article.create(results)
+            .then(function (dbArticle) {
+                console.log(dbArticle);
+            })
+            .catch(function (err) {
+                return res.json(err)
+            });
     });
-    console.log(results);
-    db.Article.create(results)
-        .then(function (dbArticle) {
-            console.log(dbArticle);
-        })
-        .catch(function (err) {
-            return res.json(err)
-        });
     res.send('scrape completed');
     // Not sure about the following line - populate HBS from DB?
     // res.render('index', {});
