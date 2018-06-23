@@ -36,14 +36,22 @@ app.get('/scrape', function (req, res) {
     request('http://www.brooklynvegan.com/', function (error, response, html) {
         var $ = cheerio.load(html);
         var results = [];
-        $('h2.title').each(function (i, element) {
-            var link = $(element).children().attr('href');
-            var title = $(element).children().text();
+        // $('h2.title').each(function (i, element) {  
+        $('article.post').each(function (i, element) {
+            // var link = $(element).children().attr('href');
+            var title = $(element).find('a').text();
+            var link = $(element).find('a').attr('href');
+            var excerpt = $(element).find('p.excerpt').text();
+            // var title = $(element).children().text();
             results.push({
                 title: title,
                 link: link,
+                excerpt: excerpt,
             });
         });
+
+
+
         // $('div.the_excerpt').each(function (i, element) {
         //     var excerpt = $(element).children().text();
         //     results.push({
