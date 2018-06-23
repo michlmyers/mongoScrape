@@ -59,14 +59,22 @@ app.get('/scrape', function (req, res) {
                 return res.json(err)
             });
     });
-    res.send('scrape completed');
+    res.render('index2');
+    // res.send('scrape completed');
     // Not sure about the following line - populate HBS from DB?
     // res.render('index', {});
 });
 
 app.get('/articles', function (req, res) {
     // article code goes here
-})
+    db.Article.find({})
+        .then(function (dbArticle) {
+            res.json(dbArticle);
+        })
+        .catch(function (err) {
+            res.json(err);
+        });
+});
 
 app.get('/articles/:id', function (req, res) {
     // unique article get request here
