@@ -9,7 +9,7 @@ var db = require('./models');
 
 var app = express();
 
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 // comment out hbs for testing
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
