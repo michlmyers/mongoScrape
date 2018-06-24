@@ -6,7 +6,11 @@ function displayResults(articles) {
     articles.forEach(function(article) {
         $('.articleList').append('<h3>' + article.title + '</h3>' + 
         '<p>' + article.excerpt + '</p>' + 
-        `<p><a href="${article.link}"> ${article.link} </a></p><br>` 
+        `<p><a href="${article.link}"> ${article.link} </a></p>` +
+        '<p>Comment on this:</p>' +
+        '<input type="text" id="commentAdd/>' +
+          '<textarea id="note"></textarea>' +
+        `<button id='newComment'>Save comment</button><br><br>`
     );
     });
 };
