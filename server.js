@@ -11,6 +11,7 @@ var app = express();
 
 var PORT = 3000;
 
+// comment out hbs for testing
 app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
 app.set('view engine', 'handlebars');
 
@@ -26,23 +27,20 @@ mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
 // Routes
-app.get('/', function (req, res) {
-    res.render('index');
-});
 
 app.get('/scrape', function (req, res) {
     // scrape  code here
     request('http://www.brooklynvegan.com/', function (error, response, html) {
         var $ = cheerio.load(html);
         var results = [];
-        $('article.post').each(function (i, element) {
-            var title = $(element).find('a').text();
-            var link = $(element).find('a').attr('href');
-            var excerpt = $(element).find('p.excerpt').text();
-            results.push({
-                title: title,
-                link: link,
-                excerpt: excerpt,
+    $('article.post').each(function (i, element) {
+        var title = $(element).find('a').text();
+        var link = $(element).find('a').attr('href');
+        var excerpt = $(element).find('p.excerpt').text();
+        results.push({
+            title: title,
+            link: link,
+            excerpt: excerpt,
             });
         });
         console.log(results);
@@ -53,8 +51,8 @@ app.get('/scrape', function (req, res) {
             .catch(function (err) {
                 return res.json(err)
             });
+    res.render('index');
     });
-    // res.render('index2');
 });
 
 app.get('/articles', function (req, res) {
@@ -68,29 +66,29 @@ app.get('/articles', function (req, res) {
         });
 });
 
-app.get('/articles/notes', function (req, res) {
+app.get('/articles/:id', function (req, res) {
     // should display the notes associated with articles 
-    db.Article.find({})
-    .populate("notes")
+    db.Article.findOne({ _id: req.params.id })
+    .populate('note')
     .then(function(dbArticle) {
-      res.json(dbArticle);
+        res.json(dbArticle);
     })
     .catch(function(err) {
-      res.json(err);
+        res.json(err);
     });
-})
+});
 
-app.post('/articles/:id', function (req, res) {
-    // post article comment code
+app.post('/articles/:id', function(req, res) {
+//    post note comment code
     db.Note.create(req.body)
     .then(function(dbNote) {
-      return db.Article.findOneAndUpdate({}, { $push: { notes: dbNote._id } }, { new: true });
+        return db.Article.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true});
     })
     .then(function(dbArticle) {
-      res.json(dbArticle);
+        res.json(dbArticle);
     })
     .catch(function(err) {
-      res.json(err);
+        res.json(err);
     });
 });
 

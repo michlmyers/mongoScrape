@@ -1,39 +1,48 @@
-$(function () {
+$.getJSON('/articles', function(data) {
+    for (var i = 0; i < data.length; i++) {
+        $('#articles').append('<p data-id="' + data[i]._id + '">' + data[i].title +
+        '<br />' + data[i].link + '<br />' + data[i].excerpt + '</p>');
+    }
+});    
 
-function displayResults(articles) {
-    $('.articleList').empty();
+$(document).on('click', 'p', function() {
+    $('#notes').empty();
+    var thisId = $(this).attr('data-id');
 
-    articles.forEach(function(article) {
-        $('.articleList').append('<h3>' + article.title + '</h3>' + 
-        '<p>' + article.excerpt + '</p>' + 
-        `<p><a href="${article.link}"> ${article.link} </a></p>` +
-        '<p>Comment on this:</p>' +
-        '<input type="text" id="commentAdd/>' +
-          '<textarea id="note"></textarea>' +
-        `<button id='newComment'>Save comment</button><br><br>`
-    );
-    });
-};
-
-$('#home').on('click', function () {
-    $('.container-fluid').load('/');
-});
-
-// for scrape button. should display scrape worked. 
-$('.btn').on('click', function () {
     $.ajax({
         method: 'GET',
-        url: '/scrape'
-    }).then(
-            // function (data) {
-            //     // $('.container-fluid').load('/scrape');
-            //     $('.container-fluid').load('/articles');
-            //     console.log('this scrape worked');
-            // });
-    $.getJSON('/articles', function(data) {
-        displayResults(data);
-    }));
+        url: '/articles/' + thisId
+    })
+    .then(function(data) {
+        console.log(data);
+        $('#notes').append('<h2>' + data.title + '</h2>');
+        $('#notes').append('<input id="titleInput" name="title" >');
+        $('#notes').append('<textarea id="bodyInput" name="body"></textarea>');
+        $('#notes').append('<button data-id="' + data._id + '" id="saveNote">Save Comment</button');
+
+        if (data.note) {
+            $('titleInput').val(data.note.title);
+            $('#bodyInput').val(data.note.body);
+        }
+    });
 });
 
+$(document).on('click', '#saveNote', function() {
+    var thisId = $(this).attr('data-id');
 
+    $.ajax({
+        method: 'POST',
+        url: '/articles/' + thisId,
+        data: {
+            title: $('#titleInput').val(),
+            body: $('#bodyInput').val()
+        }
+    })
+    .then(function(data) {
+        console.log(data);
+        $('#notes').empty();   
+    });  
+
+    $('#titleInput').val('');
+    $('#bodyInput').val('');
 });
