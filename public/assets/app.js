@@ -15,9 +15,10 @@ $(document).on('click', 'p', function() {
     })
     .then(function(data) {
         console.log(data);
-        $('#notes').append('<input id="titleInput" name="title" >');
-        $('#notes').append('<textarea id="bodyInput" name="body"></textarea>');
-        $('#notes').append('<button data-id="' + data._id + '" id="saveNote">Save Comment</button');
+        $('#enterNotes').append('<p>Enter subject and comment in boxes below<br/>');
+        $('#enterNotes').append('<input id="titleInput" name="title" >' + '<br/>');
+        $('#enterNotes').append('<textarea id="bodyInput" name="body"></textarea>');
+        $('#enterNotes').append('<button data-id="' + data._id + '" id="saveNote">Save Comment</button');
 
         if (data.note) {
             $('titleInput').val(data.note.title);
@@ -43,7 +44,8 @@ $(document).on('click', '#saveNote', function() {
     })
     .then(function(data) {
         console.log(data);
-        $('#notes').empty();   
+        $('#notes').empty();
+        $('#enterNotes').empty();  
     });  
 
     $('#titleInput').val('');
