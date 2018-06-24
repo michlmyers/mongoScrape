@@ -15,14 +15,17 @@ $(document).on('click', 'p', function() {
     })
     .then(function(data) {
         console.log(data);
-        $('#notes').append('<h2>' + data.title + '</h2>');
+        $('#notes').append('<h3>' + data.note.title + '</h3>');
+        $('#notes').append('<h6>' + data.note.body + '</h6>');
         $('#notes').append('<input id="titleInput" name="title" >');
         $('#notes').append('<textarea id="bodyInput" name="body"></textarea>');
         $('#notes').append('<button data-id="' + data._id + '" id="saveNote">Save Comment</button');
 
         if (data.note) {
             $('titleInput').val(data.note.title);
+            console.log('this is the note title:' + data.note.title);
             $('#bodyInput').val(data.note.body);
+            console.log('this is the note body:' + data.note.body);
         }
     });
 });
