@@ -68,13 +68,31 @@ app.get('/articles', function (req, res) {
         });
 });
 
-app.get('/articles/:id', function (req, res) {
-    // unique article get request here
+app.get('/articles/notes', function (req, res) {
+    // should display the notes associated with articles 
+    db.Article.find({})
+    .populate("notes")
+    .then(function(dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
 })
 
 app.post('/articles/:id', function (req, res) {
     // post article comment code
-})
+    db.Note.create(req.body)
+    .then(function(dbNote) {
+      return db.Article.findOneAndUpdate({}, { $push: { notes: dbNote._id } }, { new: true });
+    })
+    .then(function(dbArticle) {
+      res.json(dbArticle);
+    })
+    .catch(function(err) {
+      res.json(err);
+    });
+});
 
 // Server 
 app.listen(PORT, function () {
