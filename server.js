@@ -54,7 +54,7 @@ app.get('/scrape', function (req, res) {
                 return res.json(err)
             });
     });
-    res.render('index2');
+    // res.render('index2');
 });
 
 app.get('/articles', function (req, res) {
