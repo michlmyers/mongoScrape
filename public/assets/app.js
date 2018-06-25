@@ -6,6 +6,18 @@ $.getJSON('/articles', function(data) {
     }
 });    
 
+$('#scrapeButton').on('click', function() {
+    console.log('this click worked');
+    $.ajax({
+        url:'/scrape',
+        type:'GET',
+        })
+        .done(function() {
+            location.reload();
+        });
+        return false;    
+    });
+
 // get notes for article
 $(document).on('click', 'p', function() {
     $('#notes').empty();
