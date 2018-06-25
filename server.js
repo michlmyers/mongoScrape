@@ -27,6 +27,9 @@ mongoose.Promise = Promise;
 mongoose.connect(MONGODB_URI);
 
 // Routes
+app.get('/', function(req, res) {
+    res.render('index');
+});
 
 app.get('/scrape', function (req, res) {
     // scrape  code here
